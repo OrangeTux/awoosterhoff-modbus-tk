@@ -731,25 +731,25 @@ class Slave:
         If values is a list or a tuple, the value of every item is written
         If values is a number, only one value is written
         """
-        with self._data_lock: #thread safe
-            block = self._get_block(block_name)
+        # with self._data_lock: #thread safe
+        block = self._get_block(block_name)
 
-            # the block has been found
-            # check that it doesn't write out of the block
-            offset = address-block.starting_address
+        # the block has been found
+        # check that it doesn't write out of the block
+        offset = address-block.starting_address
 
-            size = 1
-            if (type(values) is list) or (type(values) is tuple):
-                size = len(values)
+        size = 1
+        if (type(values) is list) or (type(values) is tuple):
+            size = len(values)
 
-            if (offset < 0) or ((offset + size) > block.size):
-                raise OutOfModbusBlockError, "address %s size %d is out of block %s" % (address, size, block_name)
+        if (offset < 0) or ((offset + size) > block.size):
+            raise OutOfModbusBlockError, "address %s size %d is out of block %s" % (address, size, block_name)
 
-            #if Ok: write the values
-            if (type(values) is list) or (type(values) is tuple):
-                block[offset:offset+len(values)] = values
-            else:
-                block[offset] = values
+        #if Ok: write the values
+        if (type(values) is list) or (type(values) is tuple):
+            block[offset:offset+len(values)] = values
+        else:
+            block[offset] = values
 
     def get_values(self, block_name, address, size=1):
         """
